@@ -4,8 +4,11 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/dist/types';
 import prisma from '@/lib/db';
+import { unstable_noStore as noStore } from 'next/cache';
 
 const createFirstTimeUser = async (user: KindeUser) => {
+  noStore();
+
   const dbUser = await prisma.user.findUnique({
     where: { id: user.id },
   });
