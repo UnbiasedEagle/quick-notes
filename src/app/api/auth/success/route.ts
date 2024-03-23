@@ -25,8 +25,5 @@ export async function GET() {
     });
   }
 
-  if (process.env.NODE_ENV === 'development') {
-    return NextResponse.redirect(`${process.env.DEV_URL}/dashboard`);
-  }
-  return NextResponse.redirect(`${process.env.PROD_URL}/dashboard`);
+  return NextResponse.redirect(`${process.env.DEV_URL}/dashboard`);
 }
