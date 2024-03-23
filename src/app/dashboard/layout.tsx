@@ -2,6 +2,24 @@ import { DashboardNav } from '@/components/dashboard-nav';
 import { PropsWithChildren } from 'react';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
+import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/dist/types';
+import prisma from '@/lib/db';
+
+const createFirstTimeUser = async (user: KindeUser) => {
+  const dbUser = await prisma.user.findUnique({
+    where: { id: user.id },
+  });
+
+  if (!dbUser) {
+    await prisma.user.create({
+      data: {
+        id: user.id,
+        name: `${user.given_name} ${user.family_name}`,
+        email: user.email || '',
+      },
+    });
+  }
+};
 
 const DasboardLayout = async ({ children }: PropsWithChildren) => {
   const { getUser } = getKindeServerSession();
@@ -10,6 +28,8 @@ const DasboardLayout = async ({ children }: PropsWithChildren) => {
   if (!user) {
     return redirect('/');
   }
+
+  await createFirstTimeUser(user);
 
   return (
     <div className='flex flex-col space-y-6 mt-10'>
