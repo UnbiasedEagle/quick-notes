@@ -9,12 +9,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id           String        @id @unique
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  kindeUserId  String        @unique
   name         String?
   email        String        @unique
   colorScheme  String        @default("theme-orange")
@@ -23,17 +24,18 @@ model User {
 }
 
 model Subscription {
-  subscriptionId String   @id @unique
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  subscriptionId String   @unique
   startDate      DateTime
   endDate        DateTime
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  user           User     @relation(fields: [userId], references: [id])
+  user           User     @relation(fields: [userId], references: [kindeUserId])
   userId         String   @unique
 }
 
 model Note {
-  id          String @id @unique @default(uuid())
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
 
@@ -41,5 +43,5 @@ model Note {
   updatedAt DateTime @updatedAt
 
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [kindeUserId])
 }

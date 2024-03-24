@@ -28,7 +28,7 @@ const getUserData = async (userId: string) => {
   noStore();
 
   const data = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { kindeUserId: userId },
     select: {
       name: true,
       email: true,

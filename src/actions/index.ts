@@ -10,7 +10,7 @@ export const postData = async (id: string, formData: FormData) => {
 
   await prisma.user.update({
     where: {
-      id,
+      kindeUserId: id,
     },
     data: {
       name,

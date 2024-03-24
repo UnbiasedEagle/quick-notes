@@ -10,13 +10,13 @@ const createFirstTimeUser = async (user: KindeUser) => {
   noStore();
 
   const dbUser = await prisma.user.findUnique({
-    where: { id: user.id },
+    where: { kindeUserId: user.id },
   });
 
   if (!dbUser) {
     await prisma.user.create({
       data: {
-        id: user.id,
+        kindeUserId: user.id,
         name: `${user.given_name} ${user.family_name}`,
         email: user.email || '',
       },
